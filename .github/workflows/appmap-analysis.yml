@@ -1,4 +1,4 @@
-name: AppMap Archive
+name: AppMap Analysis
 
 on:
   pull_request:
