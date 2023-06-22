@@ -1,0 +1,45 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Run Tests and Archive AppMaps
+
+on: [ push ]
+
+permissions:
+  contents: read
+
+env:
+  APPMAP_TELEMETRY_DISABLED: "true"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+      # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+      # change this to (see https://github.com/ruby/setup-ruby#versioning):
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Prepare bundle for AppMap installation
+        run: bundle config unset deployment
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1-pre.9
+        with:
+          project-type: bundler
+          verbose: true
+      - name: Rails test setup
+        run: ./bin/rails db:migrate
+      - name: Run tests
+        run: ./bin/rails test
+      - name: Archive AppMaps
+        uses: getappmap/archive-action@v1-pre.13
+        with:
+          revision: $GITHUB_SHA
+          verbose: true
