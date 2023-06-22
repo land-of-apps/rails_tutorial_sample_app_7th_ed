@@ -28,8 +28,6 @@ jobs:
         with:
           project-type: bundler
           verbose: true
-      - name: TEMP Fix for AppMap Path
-        run: echo /tmp >> $GITHUB_PATH
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
