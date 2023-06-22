@@ -32,6 +32,7 @@ jobs:
         run: ./bin/rails db:migrate
       - name: Run tests
         run: | 
+          set +e
           ./bin/rails test
           exit_status=$?
           echo "exit-status=$exit_status" >> $GITHUB_OUTPUT
