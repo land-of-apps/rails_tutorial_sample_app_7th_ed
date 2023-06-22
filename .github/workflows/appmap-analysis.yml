@@ -1,0 +1,46 @@
+name: AppMap Archive
+
+on:
+  pull_request:
+  schedule:
+    # Keep the artifact up to date, as it will expire after 90 days.
+    - cron: 1 1 1 * *
+ 
+env:
+  APPMAP_TELEMETRY_DISABLED: 'true'
+  DISABLE_SPRING: 'true'
+
+jobs:
+  appmap-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+      # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+      # change this to (see https://github.com/ruby/setup-ruby#versioning):
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - name: Prepare bundle for AppMap installation
+        run: bundle config unset deployment
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1-pre.8
+        with:
+          project-type: bundler
+          verbose: true
+      - name: Rails test setup
+        run: ./bin/rails db:migrate
+      - name: Run tests
+        run: ./bin/rails test || true
+      - name: Archive AppMaps
+        uses: getappmap/archive-action@v1-pre.13
+        with:
+          revision: ${{ github.event.pull_request.head.sha }}
+          verbose: true
+      - name: Analyze AppMaps
+        uses: getappmap/analyze-action@v1-pre.13
+        with:
+          base-revision: ${{ github.event.pull_request.base.sha }}
+          head-revision: ${{ github.event.pull_request.head.sha }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
