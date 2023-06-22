@@ -30,12 +30,10 @@ jobs:
       - name: Prepare bundle for AppMap installation
         run: bundle config unset deployment
       - name: Install AppMap tools
-        uses: getappmap/install-action@v1-pre.8
+        uses: getappmap/install-action@v1-pre.9
         with:
           project-type: bundler
           verbose: true
-      - name: TEMP Fix for AppMap Path
-        run: echo /tmp >> $GITHUB_PATH
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests

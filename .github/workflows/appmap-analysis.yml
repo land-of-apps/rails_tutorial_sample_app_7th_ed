@@ -32,11 +32,6 @@ jobs:
         run: ./bin/rails db:migrate
       - name: Run tests
         run: ./bin/rails test || true
-      - name: Archive AppMaps
-        uses: getappmap/archive-action@v1-pre.13
-        with:
-          revision: ${{ github.event.pull_request.head.sha }}
-          verbose: true
       - name: Analyze AppMaps
         uses: getappmap/analyze-action@v1-pre.13
         with:
