@@ -29,8 +29,8 @@ jobs:
         with:
           project-type: bundler
           verbose: true
-      - name: Commit AppMap Config to Project
-        uses: EndBug/add-and-commit@v9
+      #- name: Commit AppMap Config to Project
+      #  uses: EndBug/add-and-commit@v9
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
