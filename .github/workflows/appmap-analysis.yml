@@ -41,4 +41,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           verbose: true
       - name: Test PR Comment
-          uses: lhotari/action-upterm@v1
+        uses: lhotari/action-upterm@v1
