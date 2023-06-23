@@ -33,7 +33,7 @@ jobs:
       - name: Run tests
         run: ./bin/rails test
       - name: Analyze AppMaps
-        if: always() #This let's AppMap analyze the failed tests
+        if: always() # Let AppMap analyze the failed tests
         uses: getappmap/analyze-action@v1-pre.13
         with:
           base-revision: ${{ github.event.pull_request.base.sha }}
@@ -41,6 +41,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           verbose: true
       - name: PR Comment AppMap Report
+        if: always() # Always Post the AppMap Report
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: ".appmap/change-report/${{ github.event.pull_request.base.sha }}-${{ github.event.pull_request.head.sha }}/report.md"
