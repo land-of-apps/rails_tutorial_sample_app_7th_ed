@@ -40,7 +40,7 @@ jobs:
           head-revision: ${{ github.event.pull_request.head.sha }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           verbose: true
-      - name: Test PR Comment
+      - name: PR Comment AppMap Report
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: ".appmap/change-report/${{ github.event.pull_request.base.sha }}-${{ github.event.pull_request.head.sha }}/report.md"
