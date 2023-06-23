@@ -37,6 +37,7 @@ jobs:
         run: ./bin/rails test
 
   appmap-analysis:
+    needs: setup-appmap
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
