@@ -11,7 +11,7 @@ env:
   DISABLE_SPRING: 'true'
 
 jobs:
-  setup-appmap:
+  appmap-analysis:
     continue-on-error: true
     runs-on: ubuntu-latest
     steps:
@@ -35,12 +35,6 @@ jobs:
         run: ./bin/rails db:migrate
       - name: Run tests
         run: ./bin/rails test
-
-  appmap-analysis:
-    needs: setup-appmap
-    if: ${{ always() }}
-    runs-on: ubuntu-latest
-    steps:
       - name: Analyze AppMaps
         uses: getappmap/analyze-action@v1-pre.13
         with:
