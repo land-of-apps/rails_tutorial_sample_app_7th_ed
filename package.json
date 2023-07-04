@@ -1,0 +1,12 @@
+{
+  "name": "rails_tutorial_sample_app_7th_ed",
+  "version": "7.0.0",
+  "description": "Rails tutorial",
+  "repository": "git@github.com:land-of-apps/rails_tutorial_sample_app_7th_ed.git",
+  "author": "Kevin Gilpin <kgilpin@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "crawlee": "^3.4.0"
+  }
+}

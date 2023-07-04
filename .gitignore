@@ -38,9 +38,12 @@
 # Ignore db test files.
 db/test.*
 
-# Ignore Vendored Gems 
+# Ignore Vendored Libraries 
 /vendor
+node_modules
 
-# Ignore Appmap temp dir
+# AppMap working files
 tmp/appmap
-.appmap
+.appmap/change-report
+.appmap/work
+
