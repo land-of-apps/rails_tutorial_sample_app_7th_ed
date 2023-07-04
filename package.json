@@ -2,11 +2,21 @@
   "name": "rails_tutorial_sample_app_7th_ed",
   "version": "7.0.0",
   "description": "Rails tutorial",
+  "scripts": {
+    "crawl": "./bin/crawl.mjs",
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
   "repository": "git@github.com:land-of-apps/rails_tutorial_sample_app_7th_ed.git",
   "author": "Kevin Gilpin <kgilpin@gmail.com>",
   "license": "MIT",
   "private": false,
   "devDependencies": {
-    "crawlee": "^3.4.0"
+    "@apify/tsconfig": "^0.1.0",
+    "@types/node": "^20.3.3",
+    "crawlee": "^3.4.0",
+    "puppeteer": "^20.7.4",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   }
 }
