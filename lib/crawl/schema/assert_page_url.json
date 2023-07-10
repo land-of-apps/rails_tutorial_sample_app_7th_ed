@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "properties": {
+    "patttern": {
+      "type": "string"
+    },
+    "is_goal_completion": {
+      "type": "boolean",
+      "description": "When true, a successful pattern match indicates that the goal has been achieved."
+    }
+  },
+  "required": ["pattern"],
+  "type": "object"
+}
