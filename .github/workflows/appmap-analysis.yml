@@ -18,28 +18,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     ####################################################################
-    ## Put actions here needed to build an environment to run your tests
+    ## Put actions here needed to build an environment and run your tests
       - uses: actions/checkout@v3
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-    ####################################################################
-    # Install AppMap tools
-      - name: Prepare bundle for AppMap installation
-        run: bundle config unset deployment
-      - name: Install AppMap tools
-        uses: getappmap/install-action@v1-pre.9
-        with:
-          project-type: bundler
-    ####################################################################
-    # Put the commands required to run your application test suite
-    # This will be the set of tests that will generate AppMaps for Analysis
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
         run: ./bin/rails test
     ####################################################################
+    ## These are the Actions that will run on Pull Request and the mainline
+    ## to analyze your changes in a Pull Request
       - name: Analyze AppMaps
         # We want to analyze the AppMaps even if the tests fail.
         if: (success() || failure()) && github.event_name == 'pull_request'
