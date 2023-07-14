@@ -24,6 +24,17 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+    ####################################################################
+    # Install AppMap tools
+      - name: Prepare bundle for AppMap installation
+        run: bundle config unset deployment
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1-pre.10
+        with:
+          project-type: bundler
+    ####################################################################
+    # Put the commands required to run your application test suite
+    # This will be the set of tests that will generate AppMaps for Analysis
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
@@ -34,7 +45,7 @@ jobs:
       - name: Analyze AppMaps
         # We want to analyze the AppMaps even if the tests fail.
         if: (success() || failure()) && github.event_name == 'pull_request'
-        uses: getappmap/analyze-action@v1-pre.13
+        uses: getappmap/analyze-action@v1-pre.14
         with:
           base-revision: ${{ github.event.pull_request.base.sha }}
           head-revision: ${{ github.event.pull_request.head.sha }}
