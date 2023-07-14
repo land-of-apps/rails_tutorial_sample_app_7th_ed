@@ -19,7 +19,6 @@ To get started with the app, clone the repo and then install the needed gems. Yo
 
 ```
 $ git clone https://github.com/learnenough/rails_tutorial_sample_app_7th_ed
-
 $ cd rails_tutorial_sample_app_7th_ed/
 ```
 
