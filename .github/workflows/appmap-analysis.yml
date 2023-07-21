@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - ci/github-actions
   schedule:
     - cron: '0 0 * * 0'
 
