@@ -42,6 +42,8 @@ jobs:
       - name: Archive AppMaps
         if: github.event_name != 'pull_request'
         uses: getappmap/archive-action@v1-pre.13
+        with:
+          verbose: true
 
       - name: Analyze AppMaps
         if: (success() || failure()) && github.event_name == 'pull_request'
@@ -50,3 +52,4 @@ jobs:
           base-revision: ${{ github.event.pull_request.base.sha }}
           head-revision: ${{ github.event.pull_request.head.sha }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          verbose: true
