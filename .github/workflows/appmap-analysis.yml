@@ -40,7 +40,7 @@ jobs:
   appmap-analysis:
     if: always()
     needs: [test]
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@352fbb945abd30c575e69607eff86068dbe19a17
     permissions:
       actions: read
       contents: read
