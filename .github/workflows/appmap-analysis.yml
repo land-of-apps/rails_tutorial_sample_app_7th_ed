@@ -31,7 +31,7 @@ jobs:
       - name: Install AppMap tools
         uses: getappmap/install-action@v1.0
         with:
-          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-faster-v1.0-pre.4/appmap-linux-x64
+          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap-faster-v1.0-pre.5/appmap-linux-x64
           project-type: bundler
 
       - name: Rails test setup
