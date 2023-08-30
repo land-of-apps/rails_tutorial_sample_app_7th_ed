@@ -38,7 +38,7 @@ jobs:
         run: ./bin/rails test
 
       - name: Set API Version Number
-        run: OPENAPI_VERSION=$(cat openapi-version) 
+        run: ${{env.OPENAPI_VERSION}}=$(cat openapi-version) 
 
       - name: Generate OpenAPI with AppMap
         run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version ${OPENAPI_VERSION}
