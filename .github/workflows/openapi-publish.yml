@@ -1,0 +1,43 @@
+name: Publish OpenAPI to Smartbear
+
+on:
+  push:
+    branches:
+      - smartbear-integration
+
+env:
+  DISABLE_SPRING: 'true'
+
+jobs:
+  appmap-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "16"
+
+      - name: Prepare bundle for AppMap installation
+        run: bundle config unset deployment
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1
+        with:
+          project-type: bundler
+
+      - name: Rails test setup
+        run: ./bin/rails db:migrate
+      - name: Run tests
+        run: ./bin/rails test
+
+      - name: Generate OpenAPI with AppMap
+        run: appmap openapi --output-file openapi.yml
+
+      - name: Publish API to SmartBear
+        run: node bin/publish.js
+        env:
+          SWAGGERHUB_KEY: ${{ secrets.SWAGGERHUB_KEY }}
