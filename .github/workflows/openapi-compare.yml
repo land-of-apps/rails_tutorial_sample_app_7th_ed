@@ -1,4 +1,4 @@
-name: Publish OpenAPI to Smartbear
+name: Compare Runtime API with Latest Published Copy
 
 on:
   push:
@@ -10,7 +10,7 @@ env:
   SWAGGERHUB_API_KEY: ${{ secrets.SWAGGERHUB_API_KEY }}
 
 jobs:
-  publish-openapi-docs:
+  compare-openapi:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -43,9 +43,12 @@ jobs:
       - name: Generate OpenAPI with AppMap
         run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version ${OPENAPI_VERSION}
 
-      - name: Publish API to SmartBear
-        run: swaggerhub api:create AppMap/rails_tutorial_sample_app_7th_ed --file openapi.yml
+      - name: Get Latest Default
+        run: swaggerhub api:get AppMap/rails_tutorial_sample_app_7th_ed > swaggerhub-api.yml
 
-      - name: Set Latest API Default
-        run: swaggerhub api:setdefault AppMap/rails_tutorial_sample_app_7th_ed/${OPENAPI_VERSION}
+      - name: Remove Blank Lines
+        run: cat openapi.yml | sed '/^$/d' > openapi-clean.yml && cat swaggerhub-api.yml | sed '/^$/d' > swaggerhub-clean.yml
+
+      - name: Compare Actual vs SwaggerHub
+        run: diff openapi-clean.yml swaggerhub-clean.yml 
         
