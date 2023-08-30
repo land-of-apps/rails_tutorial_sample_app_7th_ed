@@ -7,9 +7,10 @@ on:
 
 env:
   DISABLE_SPRING: 'true'
+  SWAGGERHUB_API_KEY: ${{ secrets.SWAGGERHUB_API_KEY }}
 
 jobs:
-  appmap-analysis:
+  publish-openapi-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -21,6 +22,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "16"
+      - name: Install SmartBear CLI
+        run: npm i -g swaggerhub-cli 
 
       - name: Prepare bundle for AppMap installation
         run: bundle config unset deployment
@@ -34,10 +37,15 @@ jobs:
       - name: Run tests
         run: ./bin/rails test
 
+      - name: Set API Version Number
+        run: OPENAPI_VERSION=$(cat openapi-version) 
+
       - name: Generate OpenAPI with AppMap
-        run: appmap openapi --output-file openapi.yml
+        run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version $OPENAPI_VERSION
 
       - name: Publish API to SmartBear
-        run: node bin/publish.js
-        env:
-          SWAGGERHUB_KEY: ${{ secrets.SWAGGERHUB_KEY }}
+        run: swaggerhub api:create AppMap/rails_tutorial_sample_app_7th_ed --file openapi.yml
+
+      - name: Set Latest API Default
+        run: swaggerhub api:setdefault AppMap/rails_tutorial_sample_app_7th_ed/$OPENAPI_VERSION
+        
