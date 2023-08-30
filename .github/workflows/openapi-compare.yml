@@ -3,7 +3,7 @@ name: Compare Runtime API with Latest Published Copy
 on:
   push:
     branches:
-      - smartbear-integration
+      - smartbear-api-comparison
 
 env:
   DISABLE_SPRING: 'true'
