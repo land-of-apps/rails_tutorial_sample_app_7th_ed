@@ -38,17 +38,22 @@ jobs:
         run: ./bin/rails test
 
       - name: Set API Version Number
+        if: always()
         run: echo "OPENAPI_VERSION"=$(cat openapi-version) >> "$GITHUB_ENV"
 
       - name: Generate OpenAPI with AppMap
+        if: always()
         run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version ${OPENAPI_VERSION}
 
       - name: Get Latest Default
+        if: always()
         run: swaggerhub api:get AppMap/rails_tutorial_sample_app_7th_ed > swaggerhub-api.yml
 
       - name: Remove Blank Lines
+        if: always()
         run: cat openapi.yml | sed '/^$/d' > openapi-clean.yml && cat swaggerhub-api.yml | sed '/^$/d' > swaggerhub-clean.yml
 
       - name: Compare Actual vs SwaggerHub
+        if: always()
         run: diff openapi-clean.yml swaggerhub-clean.yml 
         
