@@ -41,11 +41,11 @@ jobs:
         run: OPENAPI_VERSION=$(cat openapi-version) 
 
       - name: Generate OpenAPI with AppMap
-        run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version $OPENAPI_VERSION
+        run: appmap openapi --output-file openapi.yml --openapi-title rails_tutorial_sample_app_7th_ed --openapi-version ${OPENAPI_VERSION}
 
       - name: Publish API to SmartBear
         run: swaggerhub api:create AppMap/rails_tutorial_sample_app_7th_ed --file openapi.yml
 
       - name: Set Latest API Default
-        run: swaggerhub api:setdefault AppMap/rails_tutorial_sample_app_7th_ed/$OPENAPI_VERSION
+        run: swaggerhub api:setdefault AppMap/rails_tutorial_sample_app_7th_ed/${OPENAPI_VERSION}
         
