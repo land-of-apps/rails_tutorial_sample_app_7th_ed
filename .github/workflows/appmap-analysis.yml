@@ -33,6 +33,8 @@ jobs:
       - name: Install AppMap tools
         uses: getappmap/install-action@v1.0
         with:
+          # Use custom appmap tools with OpenAPI oom fix
+          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap%40openapi-oom/appmap-linux-x64
           project-type: bundler
 
       - name: Rails test setup
