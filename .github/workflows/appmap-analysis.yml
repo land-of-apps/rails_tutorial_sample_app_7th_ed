@@ -36,7 +36,7 @@ jobs:
         run: bundle config unset deployment
 
       - name: Install AppMap tools
-        uses: getappmap/install-action@v1.0
+        uses: getappmap/install-action@v1
         with:
           project-type: bundler
 
@@ -46,37 +46,18 @@ jobs:
         run: ./bin/rake partition:test\[${{ matrix.ci_node_index }},${{ matrix.ci_node_total }}\]
 
       - name: Save AppMap archive
-        uses: getappmap/archive-action@v1-pre.13
+        uses: getappmap/archive-action@v1
         with:
           archive-id: ${{ matrix.ci_node_index }}
 
   appmap-analysis:
-    runs-on: ubuntu-latest
-
-    needs: [ record-appmaps ]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install AppMap tools
-        uses: getappmap/install-action@v1.0
-        with:
-          install-appmap-library: false
-      
-      - name: Merge AppMaps
-        if: (success() || failure())
-        uses: getappmap/archive-action/merge@v1-pre.13
-        with:
-          revision: ${{ github.event.pull_request.head.sha }}
-          archive-count: 2
-
-      - name: Archive AppMaps
-        if: github.event_name != 'pull_request'
-        uses: getappmap/archive-action@v1-pre.13
-      
-      - name: Analyze AppMaps
-        if: (success() || failure()) && github.event_name == 'pull_request'
-        uses: getappmap/analyze-action@v1-pre.16
-        with:
-          base-revision: ${{ github.event.pull_request.base.sha }}
-          head-revision: ${{ github.event.pull_request.head.sha }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    if: always()
+    needs: [record-appmaps]
+    uses: getappmap/analyze-action/.github/workflows/appmap-analysis-matrix.yml@v1
+    with:
+      archive-count: 2
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+      pull-requests: write
