@@ -1,0 +1,56 @@
+name: AppMap Analysis
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+
+permissions:
+  contents: read
+  # Permission to update the PR description
+  pull-requests: write
+  # Permission to list artifacts
+  # https://docs.github.com/en/rest/actions/artifacts?apiVersion=2022-11-28#list-artifacts-for-a-repository
+  actions: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      # Install AppMap library and tools
+      - name: Enable appmap gem update
+        run: bundle config unset deployment      
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1.0
+        with:
+          # Use custom appmap tools with OpenAPI oom fix
+          tools-url: https://github.com/getappmap/appmap-js/releases/download/%40appland%2Fappmap%40openapi-oom/appmap-linux-x64
+          project-type: bundler
+
+      - name: Rails test setup
+        run: ./bin/rails db:migrate
+
+      - name: Run tests
+        run: ./bin/rails test
+
+      - name: Archive AppMaps
+        if: github.event_name != 'pull_request'
+        uses: getappmap/archive-action@v1-pre.13
+
+      - name: Analyze AppMaps
+        if: (success() || failure()) && github.event_name == 'pull_request'
+        uses: getappmap/analyze-action@v1-pre.15
+        with:
+          base-revision: ${{ github.event.pull_request.base.sha }}
+          head-revision: ${{ github.event.pull_request.head.sha }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
