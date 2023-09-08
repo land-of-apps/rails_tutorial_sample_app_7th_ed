@@ -9,8 +9,15 @@ on:
     - cron: '0 0 * * 0'
 
 jobs:
-  test:
+  record-appmaps:
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ci_node_total: [2]
+        ci_node_index: [0, 1]
+
     steps:
       - uses: actions/checkout@v3
 
@@ -28,19 +35,24 @@ jobs:
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
-        run: ./bin/rails test
-      
-      - name: Save AppMaps
-        uses: actions/cache/save@v3
+        env:
+          CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
+          CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+        run: |
+          ./bin/ci
+
+      - name: Save AppMap archive
         if: always()
+        uses: getappmap/archive-action@v1
         with:
-          path: ${{ steps.install-appmap.outputs.appmap-dir }}
-          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
+          archive-id: ${{ matrix.ci_node_index }}
 
   appmap-analysis:
     if: always()
-    needs: [test]
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+    needs: [record-appmaps]
+    uses: getappmap/analyze-action/.github/workflows/appmap-analysis-matrix.yml@v1
+    with:
+      archive-count: 2
     permissions:
       actions: read
       contents: read
