@@ -18,13 +18,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Enable appmap gem update
-        run: bundle config unset deployment      
-      - name: Install AppMap tools
-        id: install-appmap
-        uses: getappmap/install-action@v1
-        with:
-          project-type: bundler
+      
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
@@ -34,7 +28,7 @@ jobs:
         uses: actions/cache/save@v3
         if: always()
         with:
-          path: ${{ steps.install-appmap.outputs.appmap-dir }}
+          path: ./tmp/appmap
           key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
 
   appmap-analysis:
