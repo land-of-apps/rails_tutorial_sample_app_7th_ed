@@ -1,9 +1,0 @@
-name: rails_tutorial_sample_app_7th_ed
-packages:
-  - path: app
-  - path: lib
-language: ruby
-appmap_dir: tmp/appmap
-compare:
-  filter:
-    hide_external: true
