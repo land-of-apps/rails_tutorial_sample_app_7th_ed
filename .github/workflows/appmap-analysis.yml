@@ -27,11 +27,14 @@ jobs:
           verbose: true
           install-appmap-library: false
           appmap-config: |
-            name: rails_tutorial_sample_app_7th_ed
+            name: totally-a-test
             packages:
               - path: app
             language: ruby
             appmap_dir: tmp/appmap
+
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
       
       - name: Rails test setup
         run: ./bin/rails db:migrate
