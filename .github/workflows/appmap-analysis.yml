@@ -19,6 +19,19 @@ jobs:
         with:
           bundler-cache: true
       
+      - name: Prepare bundle for AppMap installation
+        run: bundle config unset deployment
+      - name: Install AppMap tools
+        uses: getappmap/install-action@v1
+        with:
+          verbose: true
+          appmap-config: |
+            name: rails_tutorial_sample_app_7th_ed
+            packages:
+              - path: app
+            language: ruby
+            appmap_dir: tmp/appmap
+      
       - name: Rails test setup
         run: ./bin/rails db:migrate
       - name: Run tests
