@@ -25,6 +25,7 @@ jobs:
         uses: getappmap/install-action@v1
         with:
           verbose: true
+          install-appmap-library: false
           appmap-config: |
             name: rails_tutorial_sample_app_7th_ed
             packages:
