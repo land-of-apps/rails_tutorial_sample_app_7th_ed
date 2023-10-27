@@ -32,6 +32,7 @@ jobs:
           key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
 
   appmap-analysis:
+    needs: [test]
     if: always()
     runs-on: ubuntu-latest
     permissions:
