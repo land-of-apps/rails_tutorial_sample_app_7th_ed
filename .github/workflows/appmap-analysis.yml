@@ -32,11 +32,44 @@ jobs:
           key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
 
   appmap-analysis:
-    if: always()
     needs: [test]
-    uses: getappmap/analyze-action/.github/workflows/appmap-analysis.yml@v1
+    if: always()
+    runs-on: ubuntu-latest
     permissions:
-      actions: read
       contents: read
+      actions: read
       checks: write
       pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Install AppMap tools
+        id: install-appmap
+        uses: getappmap/install-action@v1
+        with:
+          directory: .
+          install-appmap-library: false
+
+      - name: Restore AppMaps
+        uses: actions/cache/restore@v3
+        with:
+          path: ./tmp/appmap
+          key: appmaps-${{ github.sha }}-${{ github.run_attempt }}
+
+      - name: Archive AppMaps
+        if: github.event_name != 'pull_request'
+        uses: getappmap/archive-action@v1
+        with:
+          directory: .
+
+      - name: Analyze AppMaps
+        uses: getappmap/analyze-action@v1
+        if: github.event_name == 'pull_request'
+        with:
+          archive-retention-days: 90
+          directory: .
+          base-revision: ${{ github.event.pull_request.base.sha }}
+          head-revision: ${{ github.event.pull_request.head.sha }}
